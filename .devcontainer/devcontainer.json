@@ -1,0 +1,13 @@
+{
+  "name": "RStudio",
+  "image": "rocker/verse",
+  "settings": { 
+    "terminal.integrated.shell.linux": "/bin/bash"
+  },
+  "extensions": [
+    "REditorSupport.r",
+    "ikuyadeu.r"
+  ],
+  "forwardPorts": [8787],
+  "postCreateCommand": "echo 'Navigate to http://localhost:8787 to access RStudio'"
+}
