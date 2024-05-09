@@ -10,8 +10,9 @@ library(datasets)
 library(readxl)
 library(data.table)
 library(reticulate)
-library(magick)
-library(tinytex)
+
+# Cargar la librería reticulate
+library(reticulate)
 
 # Opciones de entornos Python
 python_paths <- c("/home/usuario/pythonmy/bin/python", "/usr/bin/python3.10", "/usr/lib/python3.10/config-3.10-x86_64-linux-gnu/libpython3.10.so", "//usr://usr")
@@ -19,8 +20,14 @@ python_paths <- c("/home/usuario/pythonmy/bin/python", "/usr/bin/python3.10", "/
 # Intenta establecer el entorno Python utilizando la primera ruta válida
 for (path in python_paths) {
   use_python(path, required = FALSE)
-  config <- py_config()
-  if (config$version != "") {
+  config <- tryCatch({
+    py_config()
+  }, error = function(e) {
+    NULL  # Devuelve NULL si hay un error en py_config()
+  })
+  
+  # Verificar si la configuración ha sido exitosa
+  if (!is.null(config) && config$version != "") {
     cat("Using Python at:", config$executable, "with version", config$version, "\n")
     break
   }
@@ -154,15 +161,15 @@ Answerlist
 ----------
 - 
 <br/> 
-```{r Tabla01, warning=FALSE,echo = FALSE, results = "asis"}
-knitr::opts_chunk$set(warning = FALSE, message = FALSE, dev = "jpg") 
+```{r Tabla01, warning=FALSE,echo = FALSE, results = "asis", dev = 'jpg'}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
 include_tikz(image01, name = "image01", markup = "markdown",format = typ, library = c("3d", "babel"), packages=c("tikz","xcolor"),width = "8.5cm")
 ```
 
 
 - 
 <br/> 
-```{python BarraVertical, echo=FALSE, message=FALSE, comment = '', warning=FALSE, results="hide", dev = "jpg"}
+```{python BarraVertical, echo=FALSE, message=FALSE, comment = '', warning=FALSE, results="hide",  dev = 'jpg'}
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -209,7 +216,7 @@ plt.show()
 
 - 
 <br/> 
-```{python BarraHorizontal, echo=FALSE, message=FALSE, comment = '', warning=FALSE, results="hide", dev = "jpg"}
+```{python BarraHorizontal, echo=FALSE, message=FALSE, comment = '', warning=FALSE, results="hide", dev = 'jpg'}
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -274,25 +281,24 @@ plt.show()
 
 - 
 <br/> 
-```{python Torta, echo = FALSE, results = "hide", dev = "jpg"}
+```{python Torta, echo = FALSE, results = "hide", dev = 'jpg'}
 # Re-importing necessary libraries after execution state reset
-
-import matplotlib.pyplot as plt  # Asegúrate de importar plt
+from matplotlib import pyplot as plt
 
 adoptantes1py = r.maskota1 # De R a Python
 adoptantes2py = r.maskota2
 adoptantes3py = r.maskota3
 
-# Re-definir los datos para el gráfico de torta
-labels = ['Porcentaje de \nPersonas \ninteresadas en \nadoptar un \n{}'.format(r.nombremascota1),
-          'Porcentaje de \nPersonas \ninteresadas en \nadoptar un \n{}'.format(r.nombremascota2),
-          'Porcentaje de \nPersonas \ninteresadas en \nadoptar un \n{}'.format(r.nombremascota3)]
-sizes = [adoptantes1py, adoptantes2py, adoptantes3py]  # Valores actuales para cálculos
-sizes2 = [adoptantes1py, adoptantes2py, adoptantes3py]  # Valores para mostrar en las etiquetas
+# Re-defining data for the pie chart
+labels = ['Porcentaje de \nPersonas \ninteresadas en \nadoptar un \n{}'.format(mascota1py),
+          'Porcentaje de \nPersonas \ninteresadas en \nadoptar un \n{}'.format(mascota2py),
+          'Porcentaje de \nPersonas \ninteresadas en \nadoptar un \n{}'.format(mascota3py)]
+sizes = [adoptantes1py, adoptantes2py, adoptantes3py]  # Actual values for calculations
+sizes2 = [adoptantes1py, adoptantes2py, adoptantes3py]  # Values to display on the labels
 colors = ['#1f77b4', '#aec7e8', '#ff7f0e']
-explode = (0, 0, 0)  # Ningún segmento está explotado
+explode = (0, 0, 0)  # No slice is exploded
 
-# Etiquetas con los valores de sizes
+# Labels with the sizes values
 pie_labels = ['{}: {}'.format(label, int(size)) for label, size in zip(labels, sizes2)]
 
 # Plot
@@ -300,10 +306,10 @@ fig, ax = plt.subplots(figsize=(6, 4), tight_layout=True)  # Ajustar el tamaño 
 ax.pie(sizes, explode=explode, labels=pie_labels, colors=colors, shadow=True, startangle=0)
 ax.axis('equal')  # La relación de aspecto igual garantiza que el gráfico circular se dibuje como un círculo.
 
-# Reducir los márgenes izquierdo y superior
+# Reducing left and top margins
 plt.subplots_adjust(left=0.1, top=0.9)
 
-# Mostrar el gráfico
+# Display the plot
 plt.show()
 ```
 

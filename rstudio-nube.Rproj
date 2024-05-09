@@ -1,8 +1,8 @@
 Version: 1.0
 
 RestoreWorkspace: Default
-SaveWorkspace: Default
-AlwaysSaveHistory: Default
+SaveWorkspace: Yes
+AlwaysSaveHistory: Yes
 
 EnableCodeIndexing: Yes
 UseSpacesForTab: Yes
@@ -13,3 +13,9 @@ RnwWeave: Sweave
 LaTeX: pdfLaTeX
 
 BuildType: Website
+
+QuitChildProcessesOnExit: Yes
+
+PythonType: system
+PythonVersion: 3.10.12
+PythonPath: /usr/bin/python3.10
